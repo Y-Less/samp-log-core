@@ -22,6 +22,9 @@
 #endif
 
 
+extern "C" DLL_PUBLIC samplog_LogLevel samplog_GetLogLevel(const char *module);
+extern "C" DLL_PUBLIC void samplog_SetLogLevel(const char *module, samplog_LogLevel level);
+extern "C" DLL_PUBLIC bool samplog_Register(const char *module);
 extern "C" DLL_PUBLIC void samplog_Init();
 extern "C" DLL_PUBLIC void samplog_Exit();
 extern "C" DLL_PUBLIC bool samplog_LogMessage(
@@ -37,6 +40,18 @@ extern "C" DLL_PUBLIC bool samplog_LogMessage(
 
 namespace samplog
 {
+	class CLoggerExists
+	{
+	public:
+		explicit CModuleExists(std::string modulename) :
+			m_Module(std::move(modulename))
+		{ }
+		
+		const char* what() const noexcept { return ("Module \"" + m_Module + "\" already exists").c_str(); }
+	private:
+		std::string m_Module;
+	}
+	
 	inline void Init()
 	{
 		samplog_Init();
@@ -57,9 +72,11 @@ namespace samplog
 	{
 	public:
 		explicit CLogger(std::string modulename) :
-			m_Module(std::move(modulename)),
-			m_LogLevel(static_cast<LogLevel>(LogLevel::ERROR | LogLevel::WARNING))
-		{ }
+			m_Module(std::move(modulename))
+		{
+			if (!samplog_Register(m_Module.c_str()))
+				throw CLoggerExists(m_Module);
+		}
 		~CLogger() = default;
 		CLogger(CLogger const &rhs) = delete;
 		CLogger& operator=(CLogger const &rhs) = delete;
@@ -70,11 +87,11 @@ namespace samplog
 	public:
 		inline void SetLogLevel(LogLevel log_level)
 		{
-			m_LogLevel = log_level;
+			samplog_SetLogLevel(m_Module.c_str(), log_level);
 		}
 		inline bool IsLogLevel(LogLevel log_level) const
 		{
-			return (m_LogLevel & log_level) == log_level;
+			return (samplog_GetLogLevel(m_Module.c_str()) & log_level) == log_level;
 		}
 
 		inline bool Log(LogLevel level, const char *msg,
@@ -97,10 +114,6 @@ namespace samplog
 
 	protected:
 		std::string m_Module;
-
-	private:
-		LogLevel m_LogLevel;
-
 	};
 
 	typedef CLogger Logger_t;
