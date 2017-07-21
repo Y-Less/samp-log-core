@@ -53,10 +53,8 @@ namespace samplog
 		CPluginLogger& operator=(CPluginLogger &&other) = delete;
 
 	public:
-		inline bool Log(LogLevel level, const char *msg)
-		{
-			return CLogger::Log(level, msg);
-		}
+		using CLogger::Log;
+
 		bool Log(AMX * const amx, const LogLevel level, const char *msg)
 		{
 			if (!CLogger::IsLogLevel(level))
@@ -71,11 +69,6 @@ namespace samplog
 			const char *name, const char *params_format)
 		{
 			return samplog::LogNativeCall(m_Module.c_str(), amx, params, name, params_format);
-		}
-
-		inline bool operator()(const char *msg)
-		{
-			return Log(LogLevel::INFO, msg);
 		}
 
 		inline bool operator()(LogLevel level, const char *msg)
