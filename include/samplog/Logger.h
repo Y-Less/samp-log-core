@@ -60,8 +60,10 @@ namespace samplog
 			m_Module(std::move(modulename)),
 			m_LogLevel(static_cast<LogLevel>(LogLevel::ERROR | LogLevel::WARNING))
 		{ }
-		~CLogger() = default;
+		virtual ~CLogger() = default;
+		CLogger() = delete;
 		CLogger(CLogger const &rhs) = delete;
+		CLogger(CLogger const &&rhs) = delete;
 		CLogger& operator=(CLogger const &rhs) = delete;
 
 		CLogger(CLogger &&other) = delete;

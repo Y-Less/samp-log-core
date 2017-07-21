@@ -45,13 +45,7 @@ namespace samplog
 		explicit CPluginLogger(std::string pluginname) :
 			CLogger("plugins/" + pluginname)
 		{ }
-		~CPluginLogger() = default;
-		CPluginLogger(CPluginLogger const &rhs) = delete;
-		CPluginLogger& operator=(CPluginLogger const &rhs) = delete;
-
-		CPluginLogger(CPluginLogger &&other) = delete;
-		CPluginLogger& operator=(CPluginLogger &&other) = delete;
-
+		virtual ~CPluginLogger() = default;
 	public:
 		using CLogger::Log;
 
@@ -63,7 +57,7 @@ namespace samplog
 			std::vector<AmxFuncCallInfo> call_info;
 
 			return GetAmxFunctionCallTrace(amx, call_info)
-				&& CLogger::Log(level, msg, call_info);
+				&& Log(level, msg, call_info);
 		}
 		inline bool LogNativeCall(AMX * const amx, cell * const params, 
 			const char *name, const char *params_format)
