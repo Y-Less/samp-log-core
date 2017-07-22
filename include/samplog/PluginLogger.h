@@ -87,7 +87,7 @@ namespace samplog
 	{
 	public:
 		explicit CDefaultLevelLogger(std::string pluginname) :
-			CPluginLogger("plugins/" + pluginname)
+			CPluginLogger(pluginname)
 		{ }
 		virtual ~CDefaultLevelLogger() = default;
 		
