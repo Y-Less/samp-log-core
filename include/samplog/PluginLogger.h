@@ -82,28 +82,6 @@ namespace samplog
 		}
 	};
 
-	template <LogLevel DEFAULT_LEVEL>
-	class CDefaultLevelLogger : public CPluginLogger
-	{
-	public:
-		explicit CDefaultLevelLogger(std::string pluginname) :
-			CPluginLogger(pluginname)
-		{ }
-		virtual ~CDefaultLevelLogger() = default;
-		
-		using CLogger::Log;
-
-		bool Log(const char *msg)
-		{
-			return Log(DEFAULT_LEVEL, msg);
-		}
-
-		inline bool operator()(const char *msg)
-		{
-			return Log(DEFAULT_LEVEL, msg);
-		}
-	};
-
 	typedef CPluginLogger PluginLogger_t;
 
 }
