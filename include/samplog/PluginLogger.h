@@ -72,7 +72,7 @@ namespace samplog
 				msg[1024];
 			va_list
 				args;
-			va_start(args, msg);
+			va_start(args, format);
 			vsprintf_s(msg, 1024, format, args);
 			va_end(args);
 			return Log(level, msg);
@@ -84,7 +84,7 @@ namespace samplog
 				msg[1024];
 			va_list
 				args;
-			va_start(args, msg);
+			va_start(args, format);
 			vsprintf_s(msg, 1024, format, args);
 			va_end(args);
 			return Log(amx, level, msg);
