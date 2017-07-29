@@ -4,6 +4,7 @@
 
 
 #include "Logger.h"
+#include <stdarg.h>
 
 
 //NOTE: Passing "-fvisibility=hidden" as a compiler option to GCC is advised!
@@ -65,13 +66,27 @@ namespace samplog
 			return samplog::LogNativeCall(m_Module.c_str(), amx, params, name, params_format);
 		}
 
-		inline bool operator()(LogLevel level, const char *msg)
+		inline bool operator()(LogLevel level, const char *format, ...)
 		{
+			char
+				msg[1024];
+			va_list
+				args;
+			va_start(args, msg);
+			vsprintf_s(msg, 1024, format, args);
+			va_end(args);
 			return Log(level, msg);
 		}
 
-		inline bool operator()(AMX * const amx, const LogLevel level, const char *msg)
+		inline bool operator()(AMX * const amx, LogLevel level, const char *format, ...)
 		{
+			char
+				msg[1024];
+			va_list
+				args;
+			va_start(args, msg);
+			vsprintf_s(msg, 1024, format, args);
+			va_end(args);
 			return Log(amx, level, msg);
 		}
 
